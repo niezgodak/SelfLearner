@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'words',
     'users',
+    'functionalities',
+
 ]
 
 MIDDLEWARE = [
