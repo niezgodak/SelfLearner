@@ -17,7 +17,7 @@ def login_user_view(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect(reverse_lazy('home:home'))
+                    return redirect(reverse_lazy('home'))
 
     else:
         form = forms.LoginForm()
