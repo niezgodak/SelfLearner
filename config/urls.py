@@ -19,6 +19,6 @@ from functionalities.views import HomeView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
-    # path('', include('words.urls')),
+    path('', include('words.urls')),
     path('home/', HomeView.as_view(), name='home')
 ]
