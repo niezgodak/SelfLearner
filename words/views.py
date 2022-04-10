@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls.base import reverse
 
-from words.models import Languages, WordGroup
+from words.models import Languages, WordGroup, Word
 from django.views.generic.base import TemplateView
 
 from django.shortcuts import render
@@ -23,3 +23,12 @@ class WordGroupsView(View):
             'wordgroups': word_groups
         }
         return render(request, "words/wordgroups.html", ctx)
+
+class WordsView(View):
+    def get(self, request, name):
+        words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name))
+        ctx = {
+            'words': words
+        }
+        return render(request, "words/words.html", ctx)
+
