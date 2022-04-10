@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block firstcontainer %}
+{% endblock %}
+
+{% block container %}
+    {% for word in words %}
+        <div class="card" style="width: 18rem;">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">{{ word.your_language }}</li>
+    <li class="list-group-item">{{ word.foreign_language }}</li>
+    <li class="list-group-item">{{ word.example_of_use }}</li>
+  </ul>
+</div>
+        <br>
+    {% endfor %}
+{% endblock %}

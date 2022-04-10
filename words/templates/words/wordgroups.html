@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block firstcontainer %}
+  <h2 class="card-title">Choose your subject</h2>
+{% endblock %}
+
+{% block container %}
+    {% for group in wordgroups %}
+
+    <div class="card">
+{#  <img src="..." class="card-img-top" alt="...">#}
+
+  <div class="card-body">
+    <h5 class="card-title">{{ group.name }}</h5>
+    <p class="card-text">Your words in {{ group.name }} group</p>
+    <a href="/wordgroups/{{ group.name }}" class="btn btn-primary">Choose</a>
+  </div>
+</div>
+        <br>
+    {% endfor %}
+{% endblock %}
