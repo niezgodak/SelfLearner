@@ -1,6 +1,85 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block first %}
-    <h1>This is home page</h1>
+{% block firstcontainer %}
+
+    <h3>Pomysł</h3>
+    <p>Główną ideą strony jest stworzenie platformy do nauki języków obcych, opartej o metodę fiszek </p>
+    <h3>Problem</h3>
+    <p>Jako uczestnik kursu językowego zauważyłam kilka problemów,
+        których rozwiązanie chciałabym zaimplementować w swojej aplikacji:</p>
+    <ol>
+        <li>Uczestniczy kursów bardzo często korzystają z płatnych aplikacji do fiszek, jednak nie korzystają z
+        wbudowanych zasobów, ale zwykle tworzą je sami, na podstawie materiału z zajęć. Dla wszystkich
+        uczestników te fiszki są powtarzalne.</li>
+        <li>Nauczyciele często udostępniają słówka do nauki w formie listy, a uczniowie (znowu każdy
+        sam) muszą wpisywać je w swoje aplikacje. Nauczyciel, mógłby udostępniać od razu przygotowaną
+        kategorię słówek z fiszkami </li>
+    </ol>
+    <h5>MUST HAVE:</h5>
+    <p> Użytkownik będzie miał możliwość tworzenia samodzielnie fiszek słówek, których chce się nauczyć </p>
+    <p> Słówka będą uporządkowane w kategorie, przypisane do konkretnych jęyzków </p>
+        <br>
+    <p>Ze stworzonych kategorii będzie możliwość nauki metodą fiszek.</p>
+    <p>Strona wyświetli słówko w języku ojczystym, następnie w języku obcym oraz da możliwość</p>
+    <p>kliknięcia jednego z dwóch przycisków - "Umiem" lub "Nie umiem"</p>
+    <p>(Tu sporo możliwości rozwinęcia projektu w JS)<br><br></p>
+    <h5>SHOULD HAVE:</h5>
+    <p> Grupowe dostępy do słówek - użytkownik, który utworzy kategorię ze słówkami</p>
+    <p> będzie miał możliwość udostępniania ich innym użytkownikom (np. nauczyciel </p>
+    <p> w trakcie kursu, będzie mógł stworzyć fiszki z danej lekcji i udostępnić </p>
+    <p> je, wszystkim uczestnikom kursu)</p>
+    <br>
+    <p>Użytkownicy będą mogli także tworzyc bazy fiszek open source</p><br>
+    <p>Wzbogacanie fiszek o obrazki</p>
+    <br>
+
+    <h5>COULD HAVE</h5>
+    <ol>
+    <li>Generator słówek do wydruku w estetycznym i czytelnym layoucie</li>
+    <li>Opcja nauki poprzez wpisywanie odpowiedzi w okno (a nie tylko klikanie "umiem"/"nie umiem")</li>
+    </ol>
+
+    <h5>MODELS:</h5>
+    <ul>
+    <li>Account - model użytkownika (być może podział na uczniów i nauczycieli)</li>
+    <li>Language - język, którego chce uczyć się użytkownik. Każdemu będzie można przypisać kategorie</li>
+    <li>Word Group - kategoria, w które grupowane będą słówka (np."Food", "Sport", "Lesson 1" lub "Important verbs").
+    Może: BooleanField - "is_open_source"</li>
+    <li>Word - słówko, które stworzy użytkownik, z kontekstem użycia. Między słowami a użytkownikami relacja
+    ManyToMany.</li>
+    <li>to be continued...</li>
+    </ul>
+
+    <h5>Funkcjonalności</h5>
+    <ul>
+        <li>Użytkownik w każdej chwili będzie mógł wykonywać operację: dodania, edycji, skasowania każdego słowa.<br>
+        Przy dodawaniu słowa będzie ono przypisywane użytkownikowi, które je stworzył (za pomocą sesji?)<br>
+        -> Formularz
+
+        </li>
+        <li>Użytkownik w każdej chwili będzie mógł wykonywać operację: dodania, edycji, skasowania każdej grupy<br>
+                -> Formularz
+        </li>
+        <li>W trakcie tworzenia nowego słowa, mozliwość spradzania kontekstu na stronie (np.ReversoContext)</li>
+        <li>Każde słowo będzie miało przypisaną wartość logiczną obrazującą czy użytkownik już umie to słowo.
+            Dla słów "nauczonych" będzie funkcja powtórek, dla słów "nienauczonych" funkcja dalszej nauki.
+            Could have: Dodanie do słówka opcji flagi - dla słów bardzo trudnych, których ciężko się nauczyć lub po prostu bardzo ważnych
+        </li>
+        <li>Większość opcji będzie przypisana tylko dla zalogowanych użytkowników. Może kilka pokazowych grup/kategorii słówek
+        dla niezalogowanych, by pokazać jak działa aplikacja.
+        </li>
+    <li>Wyszukiwarka kategorii opensource i możliwość zapisania sobie do swojego konta jakiejś grupy,
+        którą chcemy umieć. Wtedy słowo przypiszemy innemu użytkownikowi</li>
+
+    </ul>
+    <br>
+        <h5>Future</h5>
+    <p>Aplikacja ma potencjał do dużego rozwoju, oto kilka moich pomysłów na dzień dzisiejszy:</p>
+    <ul><li>Tworzenie całych kursów przez nauczycieli</li>
+    <li>Stworzenie aplikacji mobilnej na smartfony</li>
+    <li> Rozbudowanie platformy - zadania, gramatyka, odmiana czasowónikow  </li>
+    </ul>
+
+
 {% endblock %}

@@ -10,7 +10,7 @@ class Word(models.Model):
     foreign_language = models.CharField(max_length=100)
     example_of_use = models.TextField(null=True)
     is_learned = models.BooleanField(default=False)
-    #user = add user models realation -> user from session? ForeignKey
+    #user = add user models realation -> user from session? ManyToMany
     #language -> I don't know yet if it is needed
 
 class WordGroup(models.Model):
