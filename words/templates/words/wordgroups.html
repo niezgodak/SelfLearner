@@ -6,7 +6,7 @@
 
   <div class="card-body">
     <h5 class="card-title">Add new category</h5>
-    <a href="#" class="btn btn-primary">Add Category</a>
+    <a href="/wordgroups/{{ num }}/create" class="btn btn-primary">Add Category</a>
   </div>
 </div>
 {% endblock %}
@@ -22,6 +22,7 @@
     <p class="card-text">Your words in {{ group.name }} group</p>
     <a href="/wordgroups/{{ group.name }}" class="btn btn-primary">Choose</a>
     <a href="/wordgroups/{{ group.name }}/create" class="btn btn-primary">Add words</a>
+    <a href="/deletegroup/{{ group.id }}" class="btn btn-primary">Delete group</a>
   </div>
 </div>
         <br>

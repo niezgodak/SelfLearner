@@ -12,7 +12,6 @@ class Word(models.Model):
     example_of_use = models.TextField(null=True, blank=True)
     is_learned = models.BooleanField(default=False)
     user = models.ManyToManyField(Account)
-    #user = add user models realation -> user from session? ManyToMany
     #language -> I don't know yet if it is needed
     counter = models.IntegerField(default=0)
 

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block firstcontainer %}
+
+{% endblock %}
+
+{% block container %}
+    <div class="card" style="width: 40rem; height: 30rem">
+  <div class="card-body" style="display: inline-flex">
+    <h5 class="card-title word">{{ words.0.your_language }}</h5>
+  </div>
+        <a class="btn btn-primary show-foreign wordbtn">Show</a>
+
+</div>
+
+
+{% endblock %}
+
+
+
+{#    {% for word in words %}#}
+{#        <div class="card" style="width: 18rem;">#}
+{#  <ul class="list-group list-group-flush">#}
+{#    <li class="list-group-item">{{ word.your_language }}</li>#}
+{#    <li class="list-group-item">{{ word.foreign_language }}</li>#}
+{#    <li class="list-group-item">{{ word.example_of_use }}</li>#}
+{#  </ul>#}
+{#</div>#}
+
+{#    {% endfor %}#}
