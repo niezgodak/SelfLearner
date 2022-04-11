@@ -10,6 +10,10 @@ from django.views.generic.base import TemplateView
 from django.shortcuts import render
 from django.views import View
 from .forms import WordForm, WordGroupForm
+from rest_framework import status, generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from words.serializers import WordSerializer
 
 
 class LanguagesView(View):
@@ -69,19 +73,14 @@ class WordCreateView(View):
             group.words.add(word)
         return redirect(reverse('words:words', args=[name]))
 
+class WordsDataView(APIView):
+    def get(self, request, name):
+        words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name))
+        serializer = WordSerializer(words, many=True)
+        return Response(serializer.data)
+
+
 class LearningView(View):
     def get(self, request, name):
         words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name))
-        t = []
-        for word in words:
-            data = {
-                'your_language': word.your_language,
-                'foreign_language': word.foreign_language,
-                'example_of_use': word.example_of_use,
-                'is_learned': word.is_learned,
-                'counter': word.counter
-            }
-            data_json = json.dumps(data)
-            t.append(data)
-
         return render(request, "words/learning.html", {'words': words})
