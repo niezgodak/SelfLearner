@@ -1,9 +1,14 @@
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.urls.base import reverse, reverse_lazy
+from django.views.decorators.csrf import csrf_protect
 from django.views.generic.edit import FormView, CreateView, DeleteView
 from json import dumps
 import json
+from django.utils.decorators import method_decorator
+
+from rest_framework.decorators import api_view
+
 from . import forms
 from words.models import Languages, WordGroup, Word
 from django.views.generic.base import TemplateView
@@ -13,7 +18,7 @@ from .forms import WordForm, WordGroupForm
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from words.serializers import WordSerializer
+from words.serializers import WordSerializer, WordEditSerializer
 
 
 class LanguagesView(View):
@@ -80,7 +85,33 @@ class WordsDataView(APIView):
         return Response(serializer.data)
 
 
+class WordDataView(APIView):
+    def get_object(self, pk):
+        try:
+            return Word.objects.get(pk=pk)
+        except Word.DoesNotExist:
+            raise Http404
+    def get(self, request, pk):
+        word = self.get_object(pk)
+        serializer = WordSerializer(word)
+        return Response(serializer.data)
+    def put(self, request, pk):
+        word = self.get_object(pk)
+        serializer = WordEditSerializer(word, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class LearningView(View):
     def get(self, request, name):
-        words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name))
-        return render(request, "words/learning.html", {'words': words})
+        words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name)),
+        ctx = {
+            'words': words,
+            'name': name
+        }
+        return render(request, "words/learning.html", ctx)
+
+
+
+

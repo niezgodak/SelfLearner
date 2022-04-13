@@ -153,3 +153,9 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
 AUTH_USER_MODEL = 'users.Account'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication'
+    ]
+}

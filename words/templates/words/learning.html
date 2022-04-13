@@ -1,33 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block otherscripts %}
+        {% csrf_token %}
+
     <script src="{% static 'scripts/wordsfetching.js' %}" defer async></script>
 {% endblock %}
 {% block firstcontainer %}
+    <input type="hidden" id="wordGroup" name="variable" value="{{ name }}">
 
 {% endblock %}
 
 {% block container %}
-    <div class="card" style="width: 40rem; height: 30rem">
-  <div class="card-body" style="display: inline-flex">
-    <h5 class="card-title word"></h5>
-  </div>
+        {% csrf_token %}
+
+        <div class="card" style="width: 40rem; height: 30rem">
+
+    <div class="card" style="width: 18rem;">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item word">{{ word.your_language }}</li>
+    <li class="list-group-item word-foreign">{{ word.foreign_language }}</li>
+    <li class="list-group-item">{{ word.example_of_use }}</li>
+  </ul>
+</div>
+            <div class="learning-buttons">
         <a class="btn btn-primary show-foreign wordbtn">Show</a>
+                <a class="btn btn-primary show-foreign known">I knew</a>
+        <a class="btn btn-primary show-foreign unknown">I didn't know</a>
+
+            </div>
 
 </div>
 
 
 {% endblock %}
 
-
-
-{#    {% for word in words %}#}
-{#        <div class="card" style="width: 18rem;">#}
-{#  <ul class="list-group list-group-flush">#}
-{#    <li class="list-group-item">{{ word.your_language }}</li>#}
-{#    <li class="list-group-item">{{ word.foreign_language }}</li>#}
-{#    <li class="list-group-item">{{ word.example_of_use }}</li>#}
-{#  </ul>#}
-{#</div>#}
-
-{#    {% endfor %}#}
