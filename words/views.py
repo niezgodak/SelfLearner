@@ -106,9 +106,12 @@ class WordDataView(APIView):
 class LearningView(View):
     def get(self, request, name):
         words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name)),
+        language = WordGroup.objects.get(name=name).language
+        lan_id = language.id
         ctx = {
             'words': words,
-            'name': name
+            'name': name,
+            'lan_id': lan_id
         }
         return render(request, "words/learning.html", ctx)
 

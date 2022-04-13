@@ -3,6 +3,8 @@ const buttonOK = document.querySelector('.known')
 buttonOK.classList.add('d-none')
 const buttonNotOK = document.querySelector('.unknown')
 buttonNotOK.classList.add('d-none')
+const buttonGoBack= document.querySelector('.go-back')
+buttonGoBack.classList.add('d-none')
 const word = document.querySelector('.word')
 const wordForeign = document.querySelector('.word-foreign')
 const wordGroup = document.getElementById('wordGroup').value
@@ -54,6 +56,7 @@ fetch('http://127.0.0.1:8000/wordgroups/' + wordGroup + '/wordsdata/?format=json
         return response.json()
     })
      .then(function(elements) {
+         const elementsList = Array.from(elements)
          word.innerText = `${elements[i-1].your_language}`;
          wordForeign.classList.add('d-none');
          wordForeign.innerText = `${elements[i-1].foreign_language}`;
@@ -61,6 +64,11 @@ fetch('http://127.0.0.1:8000/wordgroups/' + wordGroup + '/wordsdata/?format=json
              wordForeign.classList.toggle('d-none');
              i++;
              toggleButtons()
+             if (elementsList.length == i -1){
+                 buttonGoBack.classList.toggle('d-none')
+                 buttonOK.classList.toggle('d-none');
+                 buttonNotOK.classList.toggle('d-none');
+             }
          })
          buttonOK.addEventListener('click', function (){
              word.innerText = `${elements[i-1].your_language}`;
