@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.urls.base import reverse, reverse_lazy
@@ -21,7 +22,8 @@ from rest_framework.response import Response
 from words.serializers import WordSerializer, WordEditSerializer
 
 
-class LanguagesView(View):
+class LanguagesView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
     def get(self, request):
         languages = Languages.objects.all()
         ctx = {
@@ -46,10 +48,12 @@ class AddWordGroupsView(View):
     def post(self, request, num):
         form = WordGroupForm(request.POST)
         language = Languages.objects.get(id=num)
+        user = request.user
         if form.is_valid():
             group = form.save(commit=False)
             group.language = language
             group.save()
+            group.user.add(user)
         return redirect(reverse('words:wordgroups', args=[num]))
 
 class DeleteWordGroupsView(DeleteView):
