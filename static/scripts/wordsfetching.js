@@ -68,10 +68,8 @@ fetch('http://127.0.0.1:8000/wordgroups/' + wordGroup + '/wordsdata/?format=json
              wordExample.classList.toggle('d-none');
              i++;
              toggleButtons()
-             if (elementsList.length == i -1){
-                 buttonGoBack.classList.toggle('d-none')
-                 buttonOK.classList.toggle('d-none');
-                 buttonNotOK.classList.toggle('d-none');
+             if (elementsList.length == i - 1){
+                 buttonGoBack.classList.toggle('d-none');
              }
          })
          buttonOK.addEventListener('click', function (){

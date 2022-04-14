@@ -34,7 +34,7 @@ class LanguagesView(LoginRequiredMixin, View):
 
 class WordGroupsView(View):
     def get(self, request, num):
-        word_groups = WordGroup.objects.filter(language=num)
+        word_groups = WordGroup.objects.filter(language=num).filter(user=request.user)
         ctx = {
             'wordgroups': word_groups,
             'num': num
