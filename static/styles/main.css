@@ -1,0 +1,31 @@
+.card{
+    width: 40rem;
+    border: 5px solid #E9DAC1;
+    text-align: center;
+    justify-content: center;
+    border-radius: 30px;
+    background-color: #F7ECDE;
+    font-size: xx-large;
+
+}
+.card-reverse{
+    width: 40rem;
+    border: 5px solid #F7ECDE;
+    text-align: center;
+    justify-content: center;
+    border-radius: 30px;
+    background-color: #E9DAC1;
+    font-size: xx-large;
+
+
+}
+
+.learning-buttons{
+    justify-content: space-around;
+    text-align: center;
+
+}
+.btn-primary{
+    background-color: #54BAB9 ;
+    border-color: #54BAB9 ;
+}

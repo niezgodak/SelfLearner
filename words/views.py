@@ -32,7 +32,8 @@ class LanguagesView(LoginRequiredMixin, View):
         return render(request, "words/languages.html", ctx)
 
 
-class WordGroupsView(View):
+class WordGroupsView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
     def get(self, request, num):
         word_groups = WordGroup.objects.filter(language=num).filter(user=request.user)
         ctx = {
@@ -41,7 +42,8 @@ class WordGroupsView(View):
         }
         return render(request, "words/wordgroups.html", ctx)
 
-class AddWordGroupsView(View):
+class AddWordGroupsView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
     def get(self, request, num):
         form = forms.WordGroupForm()
         return render(request, 'words/wordgroup_form.html', {'form': form})
@@ -56,11 +58,13 @@ class AddWordGroupsView(View):
             group.user.add(user)
         return redirect(reverse('words:wordgroups', args=[num]))
 
-class DeleteWordGroupsView(DeleteView):
+class DeleteWordGroupsView(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('users:login')
     model = WordGroup
     success_url = reverse_lazy('words:languages')
 
-class WordsView(View):
+class WordsView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
     def get(self, request, name):
         words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name))
         ctx = {
@@ -69,7 +73,8 @@ class WordsView(View):
         }
         return render(request, "words/words.html", ctx)
 
-class WordCreateView(View):
+class WordCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
     def get(self, request, name):
         form = forms.WordForm()
         return render(request, 'words/word_form.html', {'form': form})
@@ -107,7 +112,8 @@ class WordDataView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class LearningView(View):
+class LearningView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
     def get(self, request, name):
         words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name)),
         language = WordGroup.objects.get(name=name).language
