@@ -23,9 +23,10 @@
                 Wanna learn another category or start with this one again?</h4>
             </div><br>
             <div class="card word-foreign" style="height: 8rem;">{{ word.foreign_language }}</div><br>
-            <div class="card word-example" style="height: 5rem; font-size: large">{{ word.example_of_use.language }}</div>
+            <div class="card word-example" style="height: 5rem; font-size: large">{{ word.example_of_use.language }}<br></div>
 
 </div>
+    <br>
 
             <br>
             <div class="learning-buttons" style="width: 45rem; height: 40rem">
@@ -36,7 +37,7 @@
                      border-color: #DD4A48;">I didn't know</a>
                     <a href="/wordgroups/{{ lan_id }}" class="btn btn-primary another">Go back</a>
                     <a href="/wordgroups/{{ name }}/learn" class="btn btn-primary another">Start again</a>
-
+<br>
                 <div class="learning-buttons" style="width: 45rem; height: 40rem">
                     <br>
                     <a class="btn btn-primary show-foreign next-round">Next Round</a>

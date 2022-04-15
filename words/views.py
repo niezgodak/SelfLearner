@@ -19,7 +19,7 @@ from .forms import WordForm, WordGroupForm
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from words.serializers import WordSerializer, WordEditSerializer
+from words.serializers import WordSerializer, WordEditSerializer, WordGroupSerializer
 
 
 class LanguagesView(LoginRequiredMixin, View):
@@ -125,6 +125,28 @@ class LearningView(LoginRequiredMixin, View):
         }
         return render(request, "words/learning.html", ctx)
 
+class ShareGroupView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
+    def get(self, request, name):
+        user = request.user
+        words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name))
+        ctx = {
+            'words': words,
+            'name': name,
+            'user': user
+        }
+        return render(request, "words/wordgroup_share.html", ctx)
 
-
+class WordGroupDataView(APIView):
+    def get(self, request, name):
+        group = WordGroup.objects.get(name=name)
+        serializer = WordGroupSerializer(group)
+        return Response(serializer.data)
+    def put(self, request, name):
+        group = WordGroup.objects.get(name=name)
+        serializer = WordEditSerializer(group, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
