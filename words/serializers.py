@@ -14,4 +14,4 @@ class WordEditSerializer(serializers.ModelSerializer):
 class WordGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = WordGroup
-        fields = '__all__'
+        fields = ['user']

@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view
 
 from . import forms
 from words.models import Languages, WordGroup, Word
+from users.models import Account
 from django.views.generic.base import TemplateView
 from django.shortcuts import render
 from django.views import View
@@ -38,7 +39,8 @@ class WordGroupsView(LoginRequiredMixin, View):
         word_groups = WordGroup.objects.filter(language=num).filter(user=request.user)
         ctx = {
             'wordgroups': word_groups,
-            'num': num
+            'num': num,
+            'user': request.user
         }
         return render(request, "words/wordgroups.html", ctx)
 
@@ -65,31 +67,46 @@ class DeleteWordGroupsView(LoginRequiredMixin, DeleteView):
 
 class WordsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
-    def get(self, request, name):
-        words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name))
+    def get(self, request, name, user_pk):
+        user = request.user
+        wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
+        words = Word.objects.filter(wordgroup=wordgroup)
         ctx = {
             'words': words,
-            'name': name
+            'name': name,
+            'user': user
         }
         return render(request, "words/words.html", ctx)
 
+# class WordsView(LoginRequiredMixin, View):
+#     login_url = reverse_lazy('users:login')
+#     def get(self, request, name, user_pk):
+#         user = Account.objects.
+#         words = Word.objects.filter(wordgroup=WordGroup.objects.filter(user)get(name=name))
+#         ctx = {
+#             'words': words,
+#             'name': name
+#         }
+#         return render(request, "words/words.html", ctx)
+
 class WordCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
-    def get(self, request, name):
+    def get(self, request, name, user_pk):
         form = forms.WordForm()
         return render(request, 'words/word_form.html', {'form': form})
-    def post(self, request, name):
+    def post(self, request, name, user_pk):
         form = WordForm(request.POST)
-        group = WordGroup.objects.get(name=name)
+        group = WordGroup.objects.filter(name=name).get(user=user_pk)
         if form.is_valid():
             word = form.save(commit=False)
             word.save()
             group.words.add(word)
-        return redirect(reverse('words:words', args=[name]))
+        return redirect(reverse('words:words', args=[name, user_pk]))
 
 class WordsDataView(APIView):
-    def get(self, request, name):
-        words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name))
+    def get(self, request, name, user_pk):
+        wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
+        words = Word.objects.filter(wordgroup=wordgroup)
         serializer = WordSerializer(words, many=True)
         return Response(serializer.data)
 
@@ -114,14 +131,16 @@ class WordDataView(APIView):
 
 class LearningView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
-    def get(self, request, name):
-        words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name)),
-        language = WordGroup.objects.get(name=name).language
+    def get(self, request, name, user_pk):
+        wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
+        words = Word.objects.filter(wordgroup=wordgroup)
+        language = wordgroup.language
         lan_id = language.id
         ctx = {
             'words': words,
             'name': name,
-            'lan_id': lan_id
+            'lan_id': lan_id,
+            'user': request.user
         }
         return render(request, "words/learning.html", ctx)
 
@@ -138,15 +157,26 @@ class ShareGroupView(LoginRequiredMixin, View):
         return render(request, "words/wordgroup_share.html", ctx)
 
 class WordGroupDataView(APIView):
-    def get(self, request, name):
-        group = WordGroup.objects.get(name=name)
-        serializer = WordGroupSerializer(group)
-        return Response(serializer.data)
     def put(self, request, name):
         group = WordGroup.objects.get(name=name)
-        serializer = WordEditSerializer(group, data=request.data)
+        serializer = WordGroupSerializer(group, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# class AcceptGroup(LoginRequiredMixin, View):
+#     login_url = reverse_lazy('users:login')
+#     def get(self, request, num):
+#         form = forms.WordGroupForm()
+#         return render(request, 'words/wordgroup_form.html', {'form': form})
+#     def post(self, request, num):
+#         form = WordGroupForm(request.POST)
+#         language = Languages.objects.get(id=num)
+#         user = request.user
+#         if form.is_valid():
+#             group = form.save(commit=False)
+#             group.language = language
+#             group.save()
+#             group.user.add(user)
+#         return redirect(reverse('words:wordgroups', args=[num]))

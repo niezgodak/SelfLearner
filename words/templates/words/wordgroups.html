@@ -23,9 +23,9 @@
 
   <div class="card-body">
     <h5 class="card-title" style="font-size: x-large">{{ group.name }}</h5>
-    <a href="/wordgroups/{{ group.name }}/learn" class="btn btn-primary">Start learning</a>
-    <a href="/wordgroups/{{ group.name }}" class="btn btn-primary">See content</a>
-    <a href="/wordgroups/{{ group.name }}/create" class="btn btn-primary">Add words</a>
+    <a href="/wordgroups/{{ group.name }}/{{ user.id }}/learn/" class="btn btn-primary">Start learning</a>
+    <a href="/wordgroups/{{ group.name }}/{{ user.id }}" class="btn btn-primary">See content</a>
+    <a href="/wordgroups/{{ group.name }}/{{ user.id }}/create" class="btn btn-primary">Add words</a>
     <a href="/deletegroup/{{ group.id }}" class="btn btn-primary">Delete group</a>
     <a href="/wordgroups/{{ group.name}}/share" class="btn btn-primary">Share</a>
   </div>

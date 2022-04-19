@@ -6,12 +6,12 @@
     <script src="{% static 'scripts/wordgroupsharing.js' %}" defer async></script>
 {% endblock %}
 {% block firstcontainer %}
-        <input type="hidden" id="wordGroup" name="variable" value="{{ name }}">
-        <input type="hidden" id="user" name="variable" value="{{ user }}">
+        <input type="hidden" id="wordGroupName" name="variable" value="{{ name }}">
+        <input type="hidden" id="user" name="variable" value="{{ user.id }}">
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">Add to my groups</h5>
-    <a class="btn btn-primary">Add</a>
+    <a class="btn btn-primary add">Add</a>
   </div>
 </div>
 {% endblock %}

@@ -7,7 +7,7 @@
 
   <div class="card-body">
     <h5 class="card-title">Start learning</h5>
-    <a href="/wordgroups/{{ name }}/learn" class="btn btn-primary">Start</a>
+    <a href="/wordgroups/{{ name }}/{{ user.id }}/learn" class="btn btn-primary">Start</a>
   </div>
 </div>
     <div class="card">
@@ -18,7 +18,7 @@
 
   <div class="card-body">
     <h5 class="card-title">Add new word</h5>
-    <a href="/wordgroups/{{ name }}/create" class="btn btn-primary">Add</a>
+    <a href="/wordgroups/{{ name }}/{{ user.id }}/create" class="btn btn-primary">Add</a>
   </div>
 </div>
             <div class="card">

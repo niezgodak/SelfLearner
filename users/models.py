@@ -16,10 +16,9 @@ class CustomAccountManager(BaseUserManager):
 
         user.set_password(password)
         user.is_active = True
+        user.is_learner = True
         user.save(using=self._db)
-        if user.is_learner:
-            learners_group = Group.objects.get(name='learners')
-            user.groups.add(learners_group)
+
         return user
 
     def create_superuser(self, email, name, password=None):

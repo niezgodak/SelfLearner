@@ -11,6 +11,7 @@
 {% endblock %}
 {% block firstcontainer %}
     <input type="hidden" id="wordGroup" name="variable" value="{{ name }}">
+    <input type="hidden" id="user" name="variable" value="{{ user.id }}">
 {% endblock %}
 
 {% block container %}
@@ -36,7 +37,7 @@
                     <a class="btn btn-primary unknown" style ="background-color: #DD4A48;
                      border-color: #DD4A48;">I didn't know</a>
                     <a href="/wordgroups/{{ lan_id }}" class="btn btn-primary another">Go back</a>
-                    <a href="/wordgroups/{{ name }}/learn" class="btn btn-primary another">Start again</a>
+                    <a href="/wordgroups/{{ name }}/{{ user.id }}/learn" class="btn btn-primary another">Start again</a>
 <br>
                 <div class="learning-buttons" style="width: 45rem; height: 40rem">
                     <br>
