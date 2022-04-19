@@ -6,14 +6,18 @@
     <script src="{% static 'scripts/wordgroupsharing.js' %}" defer async></script>
 {% endblock %}
 {% block firstcontainer %}
-        <input type="hidden" id="wordGroupName" name="variable" value="{{ name }}">
-        <input type="hidden" id="user" name="variable" value="{{ user.id }}">
+
+    <form action="" method="post">
+        {% csrf_token %}
+
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">Add to my groups</h5>
-    <a class="btn btn-primary add">Add</a>
+    <button type="submit" class="btn btn-primary">Submit</button>
   </div>
 </div>
+
+    </form>
 {% endblock %}
 
 {% block container %}

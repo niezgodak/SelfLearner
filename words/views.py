@@ -146,15 +146,33 @@ class LearningView(LoginRequiredMixin, View):
 
 class ShareGroupView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
-    def get(self, request, name):
-        user = request.user
-        words = Word.objects.filter(wordgroup=WordGroup.objects.get(name=name))
+    def get(self, request, name, user_pk):
+        wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
+        words = Word.objects.filter(wordgroup=wordgroup)
         ctx = {
             'words': words,
             'name': name,
-            'user': user
         }
         return render(request, "words/wordgroup_share.html", ctx)
+
+    def post(self, request, name, user_pk):
+        wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
+        words = Word.objects.filter(wordgroup=wordgroup)
+        language_number = wordgroup.language.id
+        user = request.user
+        data = {
+            'name': wordgroup.name,
+            'language': wordgroup.language
+        }
+        new_group = WordGroup.objects.create(**data)
+        new_group.user.add(user)
+        for word in words:
+            new_group.words.add(word)
+
+        return redirect(reverse('words:wordgroups', kwargs={'num': language_number}))
+
+
+
 
 class WordGroupDataView(APIView):
     def put(self, request, name):
