@@ -7,10 +7,23 @@
 {% endblock %}
 {% block firstcontainer %}
 
-<h1>{{ user.id }} to jest share</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Add to my groups</h5>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</div>
+
+    </form>
 {% endblock %}
 
 {% block container %}
+    <h1>{{ user.id}} to jest accept</h1>
+    <h2> {{ pk }} to jest pk</h2>
+
         {% for word in words %}
         <ul>
         <li>{{ word.your_language }}</li>
