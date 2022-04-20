@@ -11,6 +11,8 @@ crispy-bootstrap5 = "==0.6"
 flake8 = "*"
 pytest = "*"
 pytest-django = "*"
+pytest-factoryboy = "*"
+pytest-faker = "*"
 
 [dev-packages]
 

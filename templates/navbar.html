@@ -25,10 +25,12 @@
           {% endif %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'words:languages' %}"> Start learning</a>
-{#        </li>#}
-{#          <li class="nav-item">#}
-{#          <a class="nav-link" href="{% url 'words:create' %}">Create</a>#}
-{#        </li>#}
+        </li>
+      {% if user.is_teacher %}
+              <li class="nav-item">
+          <a class="nav-link" href="#">Create course</a>
+        </li>
+      {% endif %}
 
       </ul>
     </div>

@@ -163,7 +163,7 @@ class ShareGroupView(LoginRequiredMixin, View):
             return render(request, "words/wordgroup_accept.html", ctx)
 
     def post(self, request, name, user_pk):
-        if request.user.id != user_pk:
+        if int(request.user.id) != int(user_pk):
             wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
             words = Word.objects.filter(wordgroup=wordgroup)
             language_number = wordgroup.language.id
