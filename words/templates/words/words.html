@@ -1,39 +1,33 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+{% endblock %}
 {% block firstcontainer %}
 
         <div class="card start">
-{#  <img src="..." class="card-img-top" alt="...">#}
-
   <div class="card-body">
     <h5 class="card-title">Start learning</h5>
     <a href="/wordgroups/{{ name }}/{{ user.id }}/learn" class="btn btn-primary">Start</a>
   </div>
-</div>
-    <div class="card">
-
-
+</div><br>
         <div class="card">
-{#  <img src="..." class="card-img-top" alt="...">#}
-
   <div class="card-body">
     <h5 class="card-title">Add new word</h5>
     <a href="/wordgroups/{{ name }}/{{ user.id }}/create" class="btn btn-primary">Add</a>
   </div>
 </div>
-            <div class="card">
 
 {% endblock %}
 
 {% block container %}
-    {% for word in words %}
-        <div class="card" style="width: 18rem;">
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">{{ word.your_language }}</li>
-    <li class="list-group-item">{{ word.foreign_language }}</li>
-    <li class="list-group-item">{{ word.example_of_use }}</li>
-  </ul>
-</div>
-        <br>
-    {% endfor %}
+    <div class="card-body">
+
+        {% for word in words %}
+            <div class="card" style="width: 12rem; height: 4rem; font-size: small; margin: 5px">{{ word.your_language }}<br>
+                {{ word.foreign_language }}<br>
+            {{ word.example_of_use }}</div><br>
+
+        {% endfor %}</div>
 {% endblock %}

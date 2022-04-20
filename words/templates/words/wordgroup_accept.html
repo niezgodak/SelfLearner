@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+{% endblock %}
 {% block otherscripts %}
         {% csrf_token %}
-
     <script src="{% static 'scripts/wordgroupsharing.js' %}" defer async></script>
 {% endblock %}
 {% block firstcontainer %}
@@ -21,15 +24,15 @@
 {% endblock %}
 
 {% block container %}
-    <h1>{{ user.id}} to jest accept</h1>
-    <h2> {{ pk }} to jest pk</h2>
+
+            <div class="card-body">
 
         {% for word in words %}
-        <ul>
-        <li>{{ word.your_language }}</li>
-        <li>{{ word.foreign_language }}</li>
-        </ul>
-    {% endfor %}
+            <div class="card" style="width: 8rem; height: 4rem; font-size: small;">{{ word.your_language }}<br>
+                {{ word.foreign_language }}</div><br>
+
+        {% endfor %}</div>
+
 
 
 {% endblock %}

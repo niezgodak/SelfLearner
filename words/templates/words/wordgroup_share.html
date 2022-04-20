@@ -1,22 +1,32 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block styles %}
+    {{ block.super }}
+{#    <link rel="stylesheet" href="{% static 'styles/sharing.css' %}">#}
+{% endblock %}
 {% block otherscripts %}
         {% csrf_token %}
-
     <script src="{% static 'scripts/wordgroupsharing.js' %}" defer async></script>
 {% endblock %}
 {% block firstcontainer %}
-
-<h1>{{ user.id }} to jest share</h1>
+<div class="container">
+  <div class="label">
+    Copy link to share
+  </div>
+  <div class="copy-text">
+    <input type="text" class="text" style="width: 400px"
+           value="http://127.0.0.1:8000/wordgroups/{{ name }}/{{ user.id }}/share/" readonly>
+{#    <button>#}
+{#      <i class="fa fa-clone"></i>#}
+{#    </button>#}
+  </div>
+</div>
 {% endblock %}
 
-{% block container %}
-        {% for word in words %}
-        <ul>
-        <li>{{ word.your_language }}</li>
-        <li>{{ word.foreign_language }}</li>
-        </ul>
-    {% endfor %}
-
-
-{% endblock %}
+{#{% block container %}#}
+{#        {% for word in words %}#}
+{#        {{ word.your_language }} - {{ word.foreign_language }}<br>#}
+{#    {% endfor %}#}
+{##}
+{##}
+{#{% endblock %}#}
