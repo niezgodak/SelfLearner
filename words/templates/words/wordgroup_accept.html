@@ -24,15 +24,17 @@
 {% endblock %}
 
 {% block container %}
-
-            <div class="card-body">
+    <div class="card">
+    <div class="card-body" style="display: flex; flex-wrap: wrap; justify-content: space-between;
+    align-items: flex-start">
 
         {% for word in words %}
-            <div class="card" style="width: 8rem; height: 4rem; font-size: small;">{{ word.your_language }}<br>
-                {{ word.foreign_language }}</div><br>
+            <div class="card" style="width: 200px; height: 120px; font-size: small; margin: 15px; padding: 15px;
+            align-items: center">
+                {{ word.your_language }}<br>
+                {{ word.foreign_language }}<br>
+                {{ word.example_of_use }}<br>
+            </div><br>
 
-        {% endfor %}</div>
-
-
-
+        {% endfor %}</div></div>
 {% endblock %}

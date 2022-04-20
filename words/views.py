@@ -7,9 +7,7 @@ from django.views.generic.edit import FormView, CreateView, DeleteView
 from json import dumps
 import json
 from django.utils.decorators import method_decorator
-
 from rest_framework.decorators import api_view
-
 from . import forms
 from words.models import Languages, WordGroup, Word
 from users.models import Account
@@ -31,7 +29,6 @@ class LanguagesView(LoginRequiredMixin, View):
             'languages': languages
         }
         return render(request, "words/languages.html", ctx)
-
 
 class WordGroupsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
@@ -65,6 +62,15 @@ class DeleteWordGroupsView(LoginRequiredMixin, DeleteView):
     model = WordGroup
     success_url = reverse_lazy('words:languages')
 
+class DeleteWordView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
+    def get(self, request, name, user_pk, word_pk):
+        wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
+        word = Word.objects.get(pk=word_pk)
+        wordgroup.words.remove(word)
+        return redirect(reverse('words:words', args=[name, user_pk]))
+
+
 class WordsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
     def get(self, request, name, user_pk):
@@ -76,18 +82,7 @@ class WordsView(LoginRequiredMixin, View):
             'name': name,
             'user': user
         }
-        return render(request, "words/words.html", ctx)
-
-# class WordsView(LoginRequiredMixin, View):
-#     login_url = reverse_lazy('users:login')
-#     def get(self, request, name, user_pk):
-#         user = Account.objects.
-#         words = Word.objects.filter(wordgroup=WordGroup.objects.filter(user)get(name=name))
-#         ctx = {
-#             'words': words,
-#             'name': name
-#         }
-#         return render(request, "words/words.html", ctx)
+        return render(request, "words/words2.html", ctx)
 
 class WordCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
@@ -109,7 +104,6 @@ class WordsDataView(APIView):
         words = Word.objects.filter(wordgroup=wordgroup)
         serializer = WordSerializer(words, many=True)
         return Response(serializer.data)
-
 
 class WordDataView(APIView):
     def get_object(self, pk):
@@ -168,7 +162,6 @@ class ShareGroupView(LoginRequiredMixin, View):
             }
             return render(request, "words/wordgroup_accept.html", ctx)
 
-
     def post(self, request, name, user_pk):
         if request.user.id != user_pk:
             wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
@@ -186,9 +179,6 @@ class ShareGroupView(LoginRequiredMixin, View):
 
             return redirect(reverse('words:wordgroups', kwargs={'num': language_number}))
 
-
-
-
 class WordGroupDataView(APIView):
     def put(self, request, name):
         group = WordGroup.objects.get(name=name)
@@ -197,19 +187,3 @@ class WordGroupDataView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# class AcceptGroup(LoginRequiredMixin, View):
-#     login_url = reverse_lazy('users:login')
-#     def get(self, request, num):
-#         form = forms.WordGroupForm()
-#         return render(request, 'words/wordgroup_form.html', {'form': form})
-#     def post(self, request, num):
-#         form = WordGroupForm(request.POST)
-#         language = Languages.objects.get(id=num)
-#         user = request.user
-#         if form.is_valid():
-#             group = form.save(commit=False)
-#             group.language = language
-#             group.save()
-#             group.user.add(user)
-#         return redirect(reverse('words:wordgroups', args=[num]))

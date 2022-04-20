@@ -31,11 +31,9 @@ def test_wordgroups_view_get(user, group):
     response = client.get(reverse('words:wordgroups', kwargs={'num': num}))
     assert response.status_code == 200
 
-
 def test_addwordgroups_view_post(user):
     client = Client()
     client.force_login(user=user)
-    user = user
     language = Languages.objects.create(language_name='testlanguage2')
     response = client.post(reverse('words:addwordgroups', kwargs={'num': language.pk}),
                            {'name': 'testgroup2',
@@ -43,5 +41,4 @@ def test_addwordgroups_view_post(user):
     groups = WordGroup.objects.all()
     assert response.status_code == 302
     assert len(groups) == 1
-
 

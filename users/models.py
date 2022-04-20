@@ -18,6 +18,9 @@ class CustomAccountManager(BaseUserManager):
         user.is_active = True
         user.is_learner = True
         user.save(using=self._db)
+        if user.is_teacher:
+            teachers_group = Group.objects.get(name='teachers')
+            user.groups.add(teachers_group)
 
         return user
 
