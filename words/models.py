@@ -22,9 +22,9 @@ class WordGroup(models.Model):
 class Course(models.Model):
     name = models.CharField(max_length=100)
     info = models.TextField(null=True, blank=True)
-    language = models.ForeignKey("Languages", on_delete=models.PROTECT, null=True)
     word_group = models.ManyToManyField(WordGroup)
-    users = models.ManyToManyField(Account)
+    owner = models.ForeignKey(Account, on_delete=models.PROTECT, related_name="owner", null=True)
+    students = models.ManyToManyField(Account)
 
 
 
