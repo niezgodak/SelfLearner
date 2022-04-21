@@ -3,12 +3,12 @@ from django.contrib.auth.models import Group
 from django.test import TestCase, Client, SimpleTestCase
 from django.urls import reverse, reverse_lazy
 from words.models import Word, WordGroup, Languages
+from users.models import Account
 from words.forms import WordForm, WordGroupForm
 import json
 
 @pytest.fixture(scope='function')
 def user(db, django_user_model):
-    Group.objects.create(name='teachers')
     user = django_user_model.objects.create_user(email='test@test.pl', name='testname', password='123')
     return user
 
@@ -47,20 +47,21 @@ def word(db):
 #         self.assertTrue(form.is_valid())
 #         self.assertEqual(len(form.errors), 0)
 
-def test_word_group_form_valid_data(language):
-    form = WordGroupForm(data={
-        'name': 'Lesson',
-        'language': language
 
-     })
-    assert form.is_valid()
-
-def test_word_group_assign_many_to_many(language, user):
-    wordgroup = WordGroup.objects.create(name='Lesson', language=language)
-    wordgroup.user.add(user)
-    groups = WordGroup.objects.all()
-    assert len(groups) == 1
-
+# @pytest.mark.usefixtures("language")
+# class TestWordGroupForms(TestCase):
+#
+#     def test_word_form_valid_data(self):
+#         form = WordGroupForm(data={
+#             'name': 'Lesson1',
+#             'language': language
+#         })
+#         self.assertTrue(form.is_valid())
+#
+#     def test_word_form_valid_data(self):
+#         form = WordGroupForm(data={
+#         })
+#         self.assertFalse(form.is_valid())
 
 
 
