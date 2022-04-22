@@ -22,5 +22,5 @@ urlpatterns = [
     path('', include('words.urls')),
     path('', include('courses.urls')),
     path('home/', HomeView.as_view(), name='home'),
-    path('/', HomeView.as_view(), name='home')
+    path('', HomeView.as_view(), name='home')
 ]

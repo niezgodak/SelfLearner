@@ -9,11 +9,7 @@ from words.models import Languages, WordGroup, Word
 from users.models import Account
 from django.shortcuts import render
 from django.views import View
-from rest_framework import status, generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from words.serializers import WordSerializer,\
-    WordEditSerializer, WordGroupSerializer
+from words.models import WordGroup
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .forms import CourseForm, CourseEditForm, CourseAddStudentsForm, PostForm
@@ -46,6 +42,7 @@ class YourCoursesView(LoginRequiredMixin, View):
         return render(request, "courses/courses_overview.html", ctx)
 
 
+
 class CourseDetailsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
     def get(self, request, user_pk, name):
@@ -53,18 +50,26 @@ class CourseDetailsView(LoginRequiredMixin, View):
             courses = Course.objects.filter(owner=user_pk)
             course = courses.get(name=name)
             posts = Post.objects.filter(course=course)
+            students = course.students.all()
             ctx = {
                 'course': course,
-                'posts': posts
+                'posts': posts,
+                'students': students
                 }
-        return render(request, "courses/course_details_teacher.html", ctx)
+            return render(request, "courses/course_details_teacher.html", ctx)
 
-    #
-    # else:
-    #     def get(self, request, user_pk, name):
-    #         courses = Course.objects.filter(students=Account.objects.get(pk=user_pk))
-    #
-    #         return render(request, "courses/course_details.html", ctx)
+
+        else:
+            course = Course.objects.filter(students=Account.objects.get(pk=user_pk)).get(name=name)
+            posts = Post.objects.filter(course=course)
+            students = course.students.all()
+
+            ctx = {
+                'course': course,
+                'posts': posts,
+                'students': students
+                }
+            return render(request, "courses/course_details.html", ctx)
 
 
 class DeleteCourseView(PermissionRequiredMixin, DeleteView):
@@ -95,8 +100,8 @@ class CourseAddStudentsView(PermissionRequiredMixin, View):
         if form.is_valid():
             student= form.data['students']
             course.students.add(student)
-
         return redirect(reverse('courses:yourcourses'))
+
 
 class CreatePostView(PermissionRequiredMixin, View):
     permission_required = 'courses.change_course'
@@ -114,5 +119,43 @@ class CreatePostView(PermissionRequiredMixin, View):
             post.save()
         return redirect(reverse('courses:yourcourses'))
 
+class FlashCardsView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
+    def get(self, request, pk):
+        course = Course.objects.get(pk=pk)
+        word_groups = course.flashcards.all()
+        ctx = {
+            'wordgroups': word_groups,
+            'user': request.user,
+            'course': course,
+        }
+        return render(request, "courses/flashcards.html", ctx)
 
+class AddFlashCardsView(PermissionRequiredMixin, View):
+    permission_required = 'courses.change_course'
+    def get(self, request, pk):
+        word_groups = WordGroup.objects.filter(user=request.user)
+        course = Course.objects.get(pk=pk)
+        ctx = {
+            'wordgroups': word_groups,
+            'user': request.user,
+            'course': course
+        }
+        return render(request, "courses/add_flashcards.html", ctx)
 
+class AddFCView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
+
+    def get(self, request, course_name, group_name, user_pk):
+        wordgroup = WordGroup.objects.filter(name=group_name).get(user=user_pk)
+        course = Course.objects.get(name=course_name)
+        course.flashcards.add(wordgroup)
+        return redirect(reverse('courses:addflashcards', args=[course.pk]))
+
+class DeleteFCView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
+    def get(self, request, course_name, group_name, user_pk):
+        wordgroup = WordGroup.objects.filter(name=group_name).get(user=user_pk)
+        course = Course.objects.get(name=course_name)
+        course.flashcards.remove(wordgroup)
+        return redirect(reverse('courses:flashcards', args=[course.pk]))

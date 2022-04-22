@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+{% endblock %}
+{% block firstcontainer %}
+    <div class="card">
+{#  <img src="..." class="card-img-top" alt="...">#}
+
+  <div class="card-body">
+    <h5 class="card-title">Add FlashCards to the course</h5>
+    <a href="/flashcards/{{ course.id }}/add" class="btn btn-primary">Add Flashcards</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block container %}
+    {% for group in wordgroups %}
+
+    <div class="card">
+{#  <img src="..." class="card-img-top" alt="...">#}
+
+  <div class="card-body">
+    <h5 class="card-title" style="font-size: x-large">{{ group.name }}</h5>
+    <a href="/wordgroups/{{ group.name }}/{{ user.id }}/learn/" class="btn btn-primary">Start learning</a>
+    <a href="/wordgroups/{{ group.name }}/{{ user.id }}" class="btn btn-primary">See content</a>
+      <a href="/deleteflashcard/{{ course.name }}/{{ group.name }}/{{ user.id }}" class="btn btn-primary">
+                   Delete from course</a>
+  </div>
+</div>
+
+        <br>
+    {% endfor %}
+{% endblock %}

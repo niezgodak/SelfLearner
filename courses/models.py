@@ -8,6 +8,7 @@ class Course(models.Model):
     word_group = models.ManyToManyField(WordGroup)
     owner = models.ForeignKey(Account, on_delete=models.PROTECT, related_name="owner", null=True)
     students = models.ManyToManyField(Account)
+    flashcards = models.ManyToManyField(WordGroup, related_name="flashcards")
 
 class Post(models.Model):
     title = models.CharField(max_length=300)
