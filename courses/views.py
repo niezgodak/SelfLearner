@@ -3,7 +3,7 @@ from django.http import request
 from django.http.response import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.urls.base import reverse, reverse_lazy
-from django.views.generic.edit import DeleteView
+from django.views.generic.edit import DeleteView, UpdateView
 from . import forms
 from words.models import Languages, WordGroup, Word
 from users.models import Account
@@ -16,8 +16,8 @@ from words.serializers import WordSerializer,\
     WordEditSerializer, WordGroupSerializer
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from .forms import CourseForm, CourseEditForm
-from .models import Course
+from .forms import CourseForm, CourseEditForm, CourseAddStudentsForm, PostForm
+from .models import Course, Post
 
 
 class AddCourseView(PermissionRequiredMixin, View):
@@ -34,12 +34,12 @@ class AddCourseView(PermissionRequiredMixin, View):
             course.owner = user
             course.save()
             course.students.add(user)
-        return redirect(reverse('courses:yourcourses', args=[user.id]))
+        return redirect(reverse('courses:yourcourses'))
 
 class YourCoursesView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
-    def get(self, request, user_pk):
-        courses = Course.objects.filter(students=Account.objects.get(pk=user_pk))
+    def get(self, request):
+        courses = Course.objects.filter(students=Account.objects.get(pk=request.user.pk))
         ctx = {
             'courses': courses
         }
@@ -49,40 +49,70 @@ class YourCoursesView(LoginRequiredMixin, View):
 class CourseDetailsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
     def get(self, request, user_pk, name):
-        courses = Course.objects.filter(students=Account.objects.get(pk=user_pk))
-        course = courses.get(name=name)
-        ctx = {
-            'course': course
-        }
         if request.user.is_teacher == True:
-            return render(request, "courses/course_details_teacher.html", ctx)
+            courses = Course.objects.filter(owner=user_pk)
+            course = courses.get(name=name)
+            posts = Post.objects.filter(course=course)
+            ctx = {
+                'course': course,
+                'posts': posts
+                }
+        return render(request, "courses/course_details_teacher.html", ctx)
 
-        else:
-            return render(request, "courses/course_details.html", ctx)
+    #
+    # else:
+    #     def get(self, request, user_pk, name):
+    #         courses = Course.objects.filter(students=Account.objects.get(pk=user_pk))
+    #
+    #         return render(request, "courses/course_details.html", ctx)
 
 
 class DeleteCourseView(PermissionRequiredMixin, DeleteView):
     permission_required = 'courses.delete_course'
     login_url = reverse_lazy('users:login')
     model = Course
-    success_url = reverse_lazy('courses:createcourse')
+    success_url = reverse_lazy('courses:yourcourses')
 
-class EditCourseView(PermissionRequiredMixin, View):
+
+class EditCourseView(PermissionRequiredMixin, UpdateView):
     permission_required = 'courses.change_course'
-    def get(self, request, course_pk):
-        course = Course.objects.get(id=course_pk)
-        ctx = {
-        'form': forms.CourseEditForm(),
-        'course': course
-        }
-        return render(request, 'courses/course_edit.html', ctx)
-# TODO post in editig
-    def post(self, request):
-        form = CourseEditForm(request.POST)
-        user = request.user
+    model = Course
+    fields = ['name', 'info']
+    template_name_suffix = '_update_form'
+    success_url = reverse_lazy('courses:yourcourses')
+
+
+class CourseAddStudentsView(PermissionRequiredMixin, View):
+    permission_required = 'courses.change_course'
+
+    def get(self, request, pk):
+        form = forms.CourseAddStudentsForm()
+        return render(request, 'courses/course_add_students.html', {'form': form})
+
+    def post(self, request, pk):
+        form = CourseAddStudentsForm(request.POST)
+        course = Course.objects.get(id=pk)
         if form.is_valid():
-            course = form.save(commit=False)
-            course.owner = user
-            course.save()
-            course.students.add(user)
-        return redirect(reverse('courses:yourcourses', args=[user.id]))
+            student= form.data['students']
+            course.students.add(student)
+
+        return redirect(reverse('courses:yourcourses'))
+
+class CreatePostView(PermissionRequiredMixin, View):
+    permission_required = 'courses.change_course'
+
+    def get(self, request, pk):
+        form = forms.PostForm()
+        return render(request, 'courses/course_post.html', {'form': form})
+
+    def post(self, request, pk):
+        form = PostForm(request.POST)
+        course = Course.objects.get(id=pk)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.course = course
+            post.save()
+        return redirect(reverse('courses:yourcourses'))
+
+
+
