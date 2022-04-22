@@ -231,3 +231,24 @@ class YourCoursesView(LoginRequiredMixin, View):
             'courses': courses
         }
         return render(request, "words/courses_overview.html", ctx)
+
+
+class CourseDetailsView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
+    def get(self, request, user_pk, name):
+        courses = Course.objects.filter(students=Account.objects.get(pk=user_pk))
+        course = courses.get(name=name)
+        ctx = {
+            'course': course
+        }
+        if request.user.is_teacher == True:
+            return render(request, "words/course_details_teacher.html", ctx)
+
+        else:
+            return render(request, "words/course_details.html", ctx)
+
+
+class DeleteCourseView(PermissionRequiredMixin, DeleteView):
+    login_url = reverse_lazy('users:login')
+    model = WordGroup
+    success_url = reverse_lazy('words:languages')

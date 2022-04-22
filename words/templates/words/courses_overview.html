@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
 
-
-{% block firstcontainer %}
-{% for course in courses %}
-
-    <p>{{ course.name }}</p>
-
+{% block cards %}
+    {% for course in courses %}
+    <div class="card" style="width: 12rem; display: flex; justify-content: space-around">
+  <img src="{% static 'images/course.svg' %}" class="card-img-top" alt="Study">
+  <div class="card-body">
+    <h5 class="card-title">{{ course.name }}</h5>
+    <p class="card-text">Your {{ course.info }} course</p>
+    <a href="/courses/{{ user.id }}/{{ course.name }}" class="btn btn-primary" class="btn btn-primary">Choose</a>
+  </div>
+</div>
     {% endfor %}
-
 {% endblock %}
