@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Permission
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from words.models import Course
+from courses.models import Course
 from . import forms
 from django.contrib.auth import authenticate, login, logout
 
