@@ -46,7 +46,7 @@ class YourCoursesView(LoginRequiredMixin, View):
 class CourseDetailsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
     def get(self, request, user_pk, name):
-        if request.user.is_teacher == True:
+        if request.user.is_teacher == True and Course.objects.get(name=name).owner == request.user:
             courses = Course.objects.filter(owner=user_pk)
             course = courses.get(name=name)
             posts = Post.objects.filter(course=course)
