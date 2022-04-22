@@ -9,9 +9,9 @@
     <h5 class="card-title" style="font-size: x-large">{{ course.name }}</h5>
     <h6 class="card-title" style="font-size: large">{{ course.info }}</h6>
     <a href="/courses/{{ user.id }}/{{ course.name }}" class="btn btn-primary">Add students</a>
-    <a href="/courses/{{ user.id }}/{{ course.name }}" class="btn btn-primary">Edit course</a>
+    <a href="/editcourse/{{ course.pk }}" class="btn btn-primary">Edit course</a>
     <a href="/courses/{{ user.id }}/{{ course.name }}" class="btn btn-primary">Post</a>
-    <a href="/courses/{{ user.id }}/{{ course.name }}" class="btn btn-primary">Delete course</a>
+    <a href="/deletecourse/{{ course.pk }}" class="btn btn-primary">Delete course</a>
   </div>
 </div>
         <div class="card">

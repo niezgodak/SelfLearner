@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import request
 from django.http.response import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.urls.base import reverse, reverse_lazy
@@ -15,7 +16,7 @@ from words.serializers import WordSerializer,\
     WordEditSerializer, WordGroupSerializer
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from .forms import CourseForm
+from .forms import CourseForm, CourseEditForm
 from .models import Course
 
 
@@ -61,6 +62,27 @@ class CourseDetailsView(LoginRequiredMixin, View):
 
 
 class DeleteCourseView(PermissionRequiredMixin, DeleteView):
+    permission_required = 'courses.delete_course'
     login_url = reverse_lazy('users:login')
-    model = WordGroup
-    success_url = reverse_lazy('words:languages')
+    model = Course
+    success_url = reverse_lazy('courses:createcourse')
+
+class EditCourseView(PermissionRequiredMixin, View):
+    permission_required = 'courses.change_course'
+    def get(self, request, course_pk):
+        course = Course.objects.get(id=course_pk)
+        ctx = {
+        'form': forms.CourseEditForm(),
+        'course': course
+        }
+        return render(request, 'courses/course_edit.html', ctx)
+# TODO post in editig
+    def post(self, request):
+        form = CourseEditForm(request.POST)
+        user = request.user
+        if form.is_valid():
+            course = form.save(commit=False)
+            course.owner = user
+            course.save()
+            course.students.add(user)
+        return redirect(reverse('courses:yourcourses', args=[user.id]))

@@ -6,6 +6,14 @@ from django.core.exceptions import ValidationError
 
 
 class CourseForm(ModelForm):
+
+    class Meta:
+        model = Course
+        fields = ['name', 'info']
+
+
+class CourseEditForm(ModelForm):
+
     class Meta:
         model = Course
         fields = ['name', 'info']
