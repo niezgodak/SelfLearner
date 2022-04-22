@@ -1,5 +1,7 @@
+from django.contrib.auth.models import Permission
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from words.models import Course
 from . import forms
 from django.contrib.auth import authenticate, login, logout
 
@@ -36,7 +38,12 @@ def registration_view(request):
             user = form.save(commit=False)
             user.is_active = True
             user.save()
-           # TODO add permissions for courses
-
+            if user.is_teacher == True:
+                p1 = Permission.objects.get(codename="add_course")
+                p2 = Permission.objects.get(codename="change_course")
+                p3 = Permission.objects.get(codename="delete_course")
+                user.user_permissions.add(p1)
+                user.user_permissions.add(p2)
+                user.user_permissions.add(p3)
         return redirect(reverse_lazy('users:login'))
     return render(request, 'users/registration.html', {'form': form})

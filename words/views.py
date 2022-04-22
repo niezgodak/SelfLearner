@@ -4,16 +4,17 @@ from django.shortcuts import render, redirect
 from django.urls.base import reverse, reverse_lazy
 from django.views.generic.edit import DeleteView
 from . import forms
-from words.models import Languages, WordGroup, Word
+from words.models import Languages, WordGroup, Word, Course
 from users.models import Account
 from django.shortcuts import render
 from django.views import View
-from .forms import WordForm, WordGroupForm
+from .forms import WordForm, WordGroupForm, CourseForm
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from words.serializers import WordSerializer,\
     WordEditSerializer, WordGroupSerializer
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class LanguagesView(LoginRequiredMixin, View):
@@ -206,3 +207,27 @@ class WordGroupDataView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class AddCourseView(PermissionRequiredMixin, View):
+    permission_required = 'words.add_course'
+    def get(self, request):
+        form = forms.CourseForm()
+        return render(request, 'words/course_form.html', {'form': form})
+
+    def post(self, request):
+        form = CourseForm(request.POST)
+        user = request.user
+        if form.is_valid():
+            course = form.save(commit=False)
+            course.owner = user
+            course.save()
+            course.students.add(user)
+        return redirect(reverse('words:yourcourses', args=[user.id]))
+
+class YourCoursesView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
+    def get(self, request, user_pk):
+        courses = Course.objects.filter(students=Account.objects.get(pk=user_pk))
+        ctx = {
+            'courses': courses
+        }
+        return render(request, "words/courses_overview.html", ctx)

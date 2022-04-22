@@ -36,7 +36,7 @@ class CustomAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-class Account(AbstractBaseUser):
+class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=60, unique=True, verbose_name='Email')
     name = models.CharField(max_length=30)
     date_join = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
