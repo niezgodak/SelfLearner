@@ -12,7 +12,7 @@ from django.views import View
 from words.models import WordGroup
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from .forms import CourseForm, CourseEditForm, CourseAddStudentsForm, PostForm
+from .forms import CourseForm, CourseEditForm, CourseAddStudentsForm, PostForm, CommentForm
 from .models import Course, Post
 
 
@@ -124,12 +124,14 @@ class FlashCardsView(LoginRequiredMixin, View):
         name = Course.objects.get(pk=pk).name
         course = Course.objects.get(pk=pk)
         owner = course.owner
+        form = forms.CommentForm()
         word_groups = course.flashcards.all()
         ctx = {
             'wordgroups': word_groups,
             'user': request.user,
             'course': course,
-            'owner': owner
+            'owner': owner,
+            'form': form
         }
         if request.user.is_teacher == True and Course.objects.get(name=name).owner == request.user:
             return render(request, "courses/flashcards_teacher.html", ctx)
