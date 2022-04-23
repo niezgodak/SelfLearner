@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+{% endblock %}
+{% block firstcontainer %}
+
+        <div class="card start">
+  <div class="card-body">
+    <h5 class="card-title">Start learning</h5>
+    <a href="/wordgroups/{{ name }}/{{ user.id }}/learn" class="btn btn-primary">Start</a>
+  </div>
+</div><br>
+
+
+{% endblock %}
+
+{% block container %}
+    <div class="card">
+    <div class="card-body" style="display: flex; flex-wrap: wrap; justify-content: space-between;
+    align-items: flex-start">
+
+        {% for word in words %}
+            <div class="card" style="width: 200px; height: 120px; font-size: small; margin: 15px; padding: 15px;
+            align-items: center">
+                {{ word.your_language }}<br>
+                {{ word.foreign_language }}<br>
+                {{ word.example_of_use }}<br>
+            </div><br>
+
+        {% endfor %}</div></div>
+{% endblock %}

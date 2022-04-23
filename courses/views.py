@@ -42,7 +42,6 @@ class YourCoursesView(LoginRequiredMixin, View):
         return render(request, "courses/courses_overview.html", ctx)
 
 
-
 class CourseDetailsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
     def get(self, request, user_pk, name):
@@ -122,12 +121,15 @@ class CreatePostView(PermissionRequiredMixin, View):
 class FlashCardsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
     def get(self, request, pk):
+        if
         course = Course.objects.get(pk=pk)
+        owner = course.owner
         word_groups = course.flashcards.all()
         ctx = {
             'wordgroups': word_groups,
             'user': request.user,
             'course': course,
+            'owner': owner
         }
         return render(request, "courses/flashcards.html", ctx)
 
@@ -150,7 +152,7 @@ class AddFCView(LoginRequiredMixin, View):
         wordgroup = WordGroup.objects.filter(name=group_name).get(user=user_pk)
         course = Course.objects.get(name=course_name)
         course.flashcards.add(wordgroup)
-        return redirect(reverse('courses:addflashcards', args=[course.pk]))
+        return redirect(reverse('courses:flashcards', args=[course.pk]))
 
 class DeleteFCView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')

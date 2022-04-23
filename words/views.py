@@ -206,3 +206,17 @@ class WordGroupDataView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class WordsStudentView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
+
+    def get(self, request, name, user_pk):
+        user = request.user
+        wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
+        words = Word.objects.filter(wordgroup=wordgroup)
+        ctx = {
+            'words': words,
+            'name': name,
+            'user': user
+        }
+        return render(request, "words/wordsstudent.html", ctx)
