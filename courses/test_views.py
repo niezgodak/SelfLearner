@@ -110,3 +110,19 @@ def course(db):
 #     response = client.get(reverse('courses:editcourse', kwargs={'pk': course.id}))
 #     assert response.status_code == 200
 
+def test_adding_students_to_course_view(user, course):
+    """Testing if it is possible to create course when you don't have permissions """
+    client = Client()
+    client.force_login(user=user)
+    response = client.get(reverse('courses:addstudents', kwargs={'pk': course.id}))
+    assert response.status_code == 403
+
+def test_adding_students_to_course_teacher_view(user, course):
+    """Testing if it is possible to create course when you have permissions """
+    user.is_teacher = True
+    p1 = Permission.objects.get(codename="change_course")
+    user.user_permissions.add(p1)
+    client = Client()
+    client.force_login(user=user)
+    response = client.get(reverse('courses:addstudents', kwargs={'pk': course.id}))
+    assert response.status_code == 200
