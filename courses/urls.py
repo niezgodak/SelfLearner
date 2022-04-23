@@ -1,6 +1,7 @@
 from django.urls import path, re_path
 from .views import AddCourseView, YourCoursesView, CourseDetailsView, DeleteCourseView, EditCourseView,\
-    CourseAddStudentsView, CreatePostView, FlashCardsView, AddFlashCardsView, AddFCView, DeleteFCView
+    CourseAddStudentsView, CreatePostView, FlashCardsView, AddFlashCardsView, AddFCView,\
+    DeleteFCView, AddFlashcardGroupView
 
 app_name = 'courses'
 
@@ -18,6 +19,8 @@ urlpatterns = [
     re_path(r'^addflashcard/(?P<course_name>([ A-Za-z0-9 _ ,!.@;()#$%^&*/><])+)/(?P<group_name>([ A-Za-z0-9 _ ,!.@;()#$%^&*/><])+)/(?P<user_pk>\d+)/$',
             AddFCView.as_view(), name="addflashcard"),
     re_path(r'^deleteflashcard/(?P<course_name>([ A-Za-z0-9 _ ,!.@;()#$%^&*/><])+)/(?P<group_name>([ A-Za-z0-9 _ ,!.@;()#$%^&*/><])+)/(?P<user_pk>\d+)/$',
-            DeleteFCView.as_view(), name="addflashcard"),
+            DeleteFCView.as_view(), name="deleteflashcard"),
+    re_path(r'^addflashcardgroup/(?P<course_pk>\d+)/(?P<group_name>([ A-Za-z0-9 _ ,!.@;()#$%^&*/><])+)/(?P<owner_pk>\d+)/(?P<user_pk>\d+)/$',
+        AddFlashcardGroupView.as_view(), name="addgroupflashcard"),
 
 ]

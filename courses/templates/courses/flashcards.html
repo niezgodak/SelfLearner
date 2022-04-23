@@ -4,16 +4,6 @@
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'styles/main.css' %}">
 {% endblock %}
-{% block firstcontainer %}
-    <div class="card">
-{#  <img src="..." class="card-img-top" alt="...">#}
-
-  <div class="card-body">
-    <h5 class="card-title">Add FlashCards to the course</h5>
-    <a href="/flashcards/{{ course.id }}/add" class="btn btn-primary">Add Flashcards</a>
-  </div>
-</div>
-{% endblock %}
 
 {% block container %}
     {% for group in wordgroups %}
@@ -24,8 +14,8 @@
   <div class="card-body">
     <h5 class="card-title" style="font-size: x-large">{{ group.name }}</h5>
     <a href="/wordgroups/{{ group.name }}/{{ owner.id }}/student" class="btn btn-primary">See content</a>
-      <a href="/deleteflashcard/{{ course.name }}/{{ group.name }}/{{ user.id }}" class="btn btn-primary">
-                   Delete from course</a>
+      <a href="/addflashcardgroup/{{ course.id }}/{{ group.name }}/{{ owner.id }}/{{ user.id }}" class="btn btn-primary">
+                   Add flashcards to my account</a>
   </div>
 </div>
 

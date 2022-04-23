@@ -121,7 +121,7 @@ class CreatePostView(PermissionRequiredMixin, View):
 class FlashCardsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
     def get(self, request, pk):
-        if
+        name = Course.objects.get(pk=pk).name
         course = Course.objects.get(pk=pk)
         owner = course.owner
         word_groups = course.flashcards.all()
@@ -131,7 +131,12 @@ class FlashCardsView(LoginRequiredMixin, View):
             'course': course,
             'owner': owner
         }
-        return render(request, "courses/flashcards.html", ctx)
+        if request.user.is_teacher == True and Course.objects.get(name=name).owner == request.user:
+            return render(request, "courses/flashcards_teacher.html", ctx)
+        else:
+            return render(request, "courses/flashcards.html", ctx)
+
+
 
 class AddFlashCardsView(PermissionRequiredMixin, View):
     permission_required = 'courses.change_course'
@@ -161,3 +166,20 @@ class DeleteFCView(LoginRequiredMixin, View):
         course = Course.objects.get(name=course_name)
         course.flashcards.remove(wordgroup)
         return redirect(reverse('courses:flashcards', args=[course.pk]))
+
+class AddFlashcardGroupView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('users:login')
+    def get(self, request, course_pk, group_name, owner_pk, user_pk):
+        wordgroup = WordGroup.objects.filter(name=group_name).get(user=owner_pk)
+        words = Word.objects.filter(wordgroup=wordgroup)
+        language_number = wordgroup.language.id
+        user = Account.objects.get(pk=user_pk)
+        data = {
+            'name': wordgroup.name,
+            'language': wordgroup.language
+        }
+        new_group = WordGroup.objects.create(**data)
+        new_group.user.add(user)
+        for word in words:
+            new_group.words.add(word)
+        return redirect(reverse('courses:flashcards', args=[course_pk]))
