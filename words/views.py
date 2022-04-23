@@ -18,6 +18,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class LanguagesView(LoginRequiredMixin, View):
+    """Showing avaliable languages to logged in user. Possible to choose one"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request):
@@ -29,6 +30,7 @@ class LanguagesView(LoginRequiredMixin, View):
 
 
 class WordGroupsView(LoginRequiredMixin, View):
+    """Showing logged-in user's wordgroups"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, num):
@@ -42,6 +44,7 @@ class WordGroupsView(LoginRequiredMixin, View):
 
 
 class AddWordGroupsView(LoginRequiredMixin, View):
+    """Creating new word groups using WordGroup Form"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, num):
@@ -61,12 +64,14 @@ class AddWordGroupsView(LoginRequiredMixin, View):
 
 
 class DeleteWordGroupsView(LoginRequiredMixin, DeleteView):
+    """Deleting word group - group pk from url"""
     login_url = reverse_lazy('users:login')
     model = WordGroup
     success_url = reverse_lazy('words:languages')
 
 
 class DeleteWordView(LoginRequiredMixin, View):
+    """Deleting word from a logged-in user's group"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, name, user_pk, word_pk):
@@ -77,6 +82,7 @@ class DeleteWordView(LoginRequiredMixin, View):
 
 
 class WordsView(LoginRequiredMixin, View):
+    """Presenting all the words from a particular group (group name from url)"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, name, user_pk):
@@ -92,6 +98,7 @@ class WordsView(LoginRequiredMixin, View):
 
 
 class WordCreateView(LoginRequiredMixin, View):
+    """"Creating a new word and adding it to a chosen group"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, name, user_pk):
@@ -109,6 +116,7 @@ class WordCreateView(LoginRequiredMixin, View):
 
 
 class WordsDataView(APIView):
+    """"Creating logged-in user's words API to use it in a learning mode"""
     def get(self, request, name, user_pk):
         wordgroup = WordGroup.objects.filter(name=name).get(user=user_pk)
         words = Word.objects.filter(wordgroup=wordgroup)
@@ -117,6 +125,7 @@ class WordsDataView(APIView):
 
 
 class WordDataView(APIView):
+    """API View for a certain word to use it in a learning mode with a put function"""
     def get_object(self, pk):
         try:
             return Word.objects.get(pk=pk)
@@ -138,6 +147,7 @@ class WordDataView(APIView):
 
 
 class LearningView(LoginRequiredMixin, View):
+    """Learning using flashcards - data passed into JS script wordfetching.js """
     login_url = reverse_lazy('users:login')
 
     def get(self, request, name, user_pk):
@@ -155,6 +165,9 @@ class LearningView(LoginRequiredMixin, View):
 
 
 class ShareGroupView(LoginRequiredMixin, View):
+    """Sharing your group with another user by creating a link to copy
+    Accepting shared group by duplicating a group into a logged-in user's groups
+    Template used basing on who is logged in user"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, name, user_pk):
@@ -199,6 +212,7 @@ class ShareGroupView(LoginRequiredMixin, View):
 
 
 class WordGroupDataView(APIView):
+    """Word group API view with a put method to edit groups"""
     def put(self, request, name):
         group = WordGroup.objects.get(name=name)
         serializer = WordGroupSerializer(group, data=request.data)
@@ -208,6 +222,7 @@ class WordGroupDataView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class WordsStudentView(LoginRequiredMixin, View):
+    """View for showing course flashcard group to students who cannot change those groups"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, name, user_pk):
