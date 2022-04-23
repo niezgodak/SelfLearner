@@ -2,7 +2,6 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import Group, PermissionsMixin
 from django.db import models
 
-# Create your models here.
 
 class CustomAccountManager(BaseUserManager):
     def create_user(self, email, name, password=None):
