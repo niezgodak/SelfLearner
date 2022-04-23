@@ -12,6 +12,7 @@ from .models import Course, Post
 
 
 class AddCourseView(PermissionRequiredMixin, View):
+    """Adding new course with a Course form. Avaliable to teachers with permissions only"""
     permission_required = 'courses.add_course'
 
     def get(self, request):
@@ -30,6 +31,7 @@ class AddCourseView(PermissionRequiredMixin, View):
 
 
 class YourCoursesView(LoginRequiredMixin, View):
+    """Logged-in user's courses (for teachers and students)"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request):
@@ -41,6 +43,7 @@ class YourCoursesView(LoginRequiredMixin, View):
 
 
 class CourseDetailsView(LoginRequiredMixin, View):
+    """View presenting course details with different options for course owner and course student"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, user_pk, name):
@@ -69,6 +72,7 @@ class CourseDetailsView(LoginRequiredMixin, View):
 
 
 class DeleteCourseView(PermissionRequiredMixin, DeleteView):
+    """Deleting course avaliable for course owner only"""
     permission_required = 'courses.delete_course'
     login_url = reverse_lazy('users:login')
     model = Course
@@ -76,6 +80,7 @@ class DeleteCourseView(PermissionRequiredMixin, DeleteView):
 
 
 class EditCourseView(PermissionRequiredMixin, UpdateView):
+    """Editing course available for course owner only"""
     permission_required = 'courses.change_course'
     model = Course
     fields = ['name', 'info']
@@ -84,6 +89,7 @@ class EditCourseView(PermissionRequiredMixin, UpdateView):
 
 
 class CourseAddStudentsView(PermissionRequiredMixin, View):
+    """Adding students to course available for course owner only"""
     permission_required = 'courses.change_course'
 
     def get(self, request, pk):
@@ -100,6 +106,7 @@ class CourseAddStudentsView(PermissionRequiredMixin, View):
 
 
 class CreatePostView(PermissionRequiredMixin, View):
+    """Creating posts in course detail view available for course owner only"""
     permission_required = 'courses.change_course'
 
     def get(self, request, pk):
@@ -117,6 +124,8 @@ class CreatePostView(PermissionRequiredMixin, View):
 
 
 class FlashCardsView(LoginRequiredMixin, View):
+    """Presenting flashards avaliable for this course - different options for
+    course owner and course students"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, pk):
@@ -140,6 +149,8 @@ class FlashCardsView(LoginRequiredMixin, View):
 
 
 class AddFlashCardsView(PermissionRequiredMixin, View):
+    """Adding new flash card groups for a course - available for course
+     owner only."""
     permission_required = 'courses.change_course'
 
     def get(self, request, pk):
@@ -154,6 +165,7 @@ class AddFlashCardsView(PermissionRequiredMixin, View):
 
 
 class AddFCView(LoginRequiredMixin, View):
+    """Adding flashcards groups into a course"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, course_name, group_name, user_pk):
@@ -164,6 +176,7 @@ class AddFCView(LoginRequiredMixin, View):
 
 
 class DeleteFCView(LoginRequiredMixin, View):
+    """Deleting flashcard group from a course"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, course_name, group_name, user_pk):
@@ -174,12 +187,12 @@ class DeleteFCView(LoginRequiredMixin, View):
 
 
 class AddFlashcardGroupView(LoginRequiredMixin, View):
+    """Adding a flashcards groups from a course into your private resources"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, course_pk, group_name, owner_pk, user_pk):
         wordgroup = WordGroup.objects.filter(name=group_name).get(user=owner_pk)
         words = Word.objects.filter(wordgroup=wordgroup)
-        # language_number = wordgroup.language.id
         user = Account.objects.get(pk=user_pk)
         data = {
             'name': wordgroup.name,
