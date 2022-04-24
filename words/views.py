@@ -222,7 +222,7 @@ class WordGroupDataView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class WordsStudentView(LoginRequiredMixin, View):
-    """View for showing course flashcard group to students who cannot change those groups"""
+    """View for showing flashcard groups to students in course who cannot change those groups"""
     login_url = reverse_lazy('users:login')
 
     def get(self, request, name, user_pk):
