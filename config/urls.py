@@ -24,3 +24,5 @@ urlpatterns = [
     path('home/', HomeView.as_view(), name='home'),
     path('', HomeView.as_view(), name='home')
 ]
+
+
