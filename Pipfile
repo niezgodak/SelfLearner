@@ -16,6 +16,7 @@ pytest-faker = "*"
 djangorestframework = "*"
 gunicorn = "*"
 whitenoise = "*"
+dj-database-url = "*"
 
 [dev-packages]
 
