@@ -16,7 +16,7 @@ document.querySelectorAll('.another').forEach(function(button){
 
 const wordGroup = document.getElementById('wordGroup').value
 const user = document.getElementById('user').value
-const apihost = 'http://127.0.0.1:8000/wordgroups/wordsdata/'
+const apihost = 'https://selflearnerapp.herokuapp.com/wordgroups/wordsdata/'
 let i = 1
 
 function toggleButtons(){
@@ -93,7 +93,7 @@ function learnOn(elements){
         document.querySelectorAll('.another').forEach(function(button){
             button.classList.remove('d-none')
             button.addEventListener('click', function(){
-            fetch('http://127.0.0.1:8000/wordgroups/' + wordGroup + '/' + user + '/wordsdata/?format=json')
+            fetch('https://selflearnerapp.herokuapp.com/wordgroups/' + wordGroup + '/' + user + '/wordsdata/?format=json')
     .then(response => {
         return response.json()
     })
@@ -178,7 +178,7 @@ function learnOn(elements){
 }
 
 
-function first(){fetch('http://127.0.0.1:8000/wordgroups/' + wordGroup + '/' + user + '/' + 'wordsdata/?format=json')
+function first(){fetch('https://selflearnerapp.herokuapp.com/wordgroups/' + wordGroup + '/' + user + '/' + 'wordsdata/?format=json')
     .then(response => {
         return response.json()
     })
@@ -195,7 +195,7 @@ function first(){fetch('http://127.0.0.1:8000/wordgroups/' + wordGroup + '/' + u
          })
          })}
 
-function second(){fetch('http://127.0.0.1:8000/wordgroups/' + wordGroup + '/' + user + '/wordsdata/?format=json')
+function second(){fetch('https://selflearnerapp.herokuapp.com/wordgroups/' + wordGroup + '/' + user + '/wordsdata/?format=json')
     .then(response => {
         return response.json()
     })
