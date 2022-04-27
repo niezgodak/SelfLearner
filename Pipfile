@@ -13,6 +13,8 @@ pytest = "*"
 pytest-django = "*"
 pytest-factoryboy = "*"
 pytest-faker = "*"
+djangorestframework = "*"
+gunicorn = "*"
 
 [dev-packages]
 
